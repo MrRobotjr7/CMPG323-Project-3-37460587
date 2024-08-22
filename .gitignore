@@ -5,7 +5,7 @@
 
 # User-specific files
 *.rsuser
-*.suo
+*.suos 
 *.user
 *.userosscache
 *.sln.docstates
@@ -331,6 +331,8 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+#ignore this
+appsetting.json
 
 # OpenCover UI analysis results
 OpenCover/
@@ -361,5 +363,3 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/TelemetryPortal_MVC/Views/Home/Index.cshtml
-/TelemetryPortal_MVC/appsettings.json
