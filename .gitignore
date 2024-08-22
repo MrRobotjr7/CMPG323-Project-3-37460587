@@ -5,7 +5,7 @@
 
 # User-specific files
 *.rsuser
-*.suo
+*.suos 
 *.user
 *.userosscache
 *.sln.docstates
@@ -331,6 +331,8 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
+#ignore this
+appsetting.json
 
 # OpenCover UI analysis results
 OpenCover/
