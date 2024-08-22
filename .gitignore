@@ -332,7 +332,7 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 #ignore this
-appsetting.json
+appsettings.json
 
 # OpenCover UI analysis results
 OpenCover/
