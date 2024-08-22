@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/TelemetryPortal_MVC/Views/Home/Index.cshtml
+/TelemetryPortal_MVC/appsettings.json
