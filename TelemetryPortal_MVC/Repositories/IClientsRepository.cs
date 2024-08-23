@@ -4,13 +4,11 @@ namespace TelemetryPortal_MVC.Repositories
 {
     public interface IClientsRepository
     {
-        IEnumerable<Client> GetAll();  
-        Client GetById(Guid clientId);  
-        void Add(Client client);  
-        void Update(Client client);  
-        void Delete(Guid clientId);  
-        bool ClientExists(Guid clientId);  
-
-
+        Task<IEnumerable<Client>> GetAllAsync();
+        Task<Client> GetByIdAsync(Guid id);
+        Task AddAsync(Client client);
+        Task UpdateAsync(Client client);
+        Task DeleteAsync(Guid id);
+        Task<bool> ClientExistsAsync(Guid id);
     }
 }

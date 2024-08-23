@@ -1,53 +1,57 @@
-﻿using TelemetryPortal_MVC.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using TelemetryPortal_MVC.Data;
 using TelemetryPortal_MVC.Models;
 
 namespace TelemetryPortal_MVC.Repositories
 {
     public class ClientsRepository : IClientsRepository
     {
-
         protected readonly TechtrendsContext _context;
-        
-            public ClientsRepository(TechtrendsContext context)
+
+        public ClientsRepository(TechtrendsContext context)
         {
-               _context = context;
-        
+            _context = context;
         }
 
-        
-
-        public IEnumerable<Client> GetAll()
-        { 
-            return _context.Clients.ToList();
-        }
-        public Client GetById(Guid clientId)
+        public async Task<IEnumerable<Client>> GetAllAsync()
         {
-            return _context.Clients.FirstOrDefault(c => c.ClientId == clientId);
+            return await _context.Clients.ToListAsync();
         }
 
-        public void Add(Client client)
+        public async Task<Client> GetByIdAsync(Guid clientId)
+        {
+            return await _context.Clients.FirstOrDefaultAsync(c => c.ClientId == clientId);
+        }
+
+        public async Task AddAsync(Client client)
         {
             _context.Clients.Add(client);
-            _context.SaveChanges();
-        }
-        public void Update(Client client)
-        {
-            _context.Clients.Update(client);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Delete(Guid clientId)
+        public async Task UpdateAsync(Client client)
         {
-            var client = _context.Clients.FirstOrDefault(c => c.ClientId == clientId);
+            _context.Clients.Update(client);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(Guid clientId)
+        {
+            var client = await _context.Clients.FirstOrDefaultAsync(c => c.ClientId == clientId);
             if (client != null)
             {
                 _context.Clients.Remove(client);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
-        public bool ClientExists(Guid clientId)
+
+        public async Task<bool> ClientExistsAsync(Guid clientId)
         {
-            return _context.Clients.Any(e => e.ClientId == clientId);
+            return await _context.Clients.AnyAsync(e => e.ClientId == clientId);
         }
     }
 }
