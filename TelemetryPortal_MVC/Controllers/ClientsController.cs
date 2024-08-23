@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using TelemetryPortal_MVC.Data;
 using TelemetryPortal_MVC.Models;
 using TelemetryPortal_MVC.Repositories;
 
@@ -15,18 +10,18 @@ namespace TelemetryPortal_MVC.Controllers
     [Authorize]
     public class ClientsController : Controller
     {
-        private readonly IClientsRepository _clientsRepository;
+        private readonly IClientsRepository _clientRepository;
 
         public ClientsController(IClientsRepository clientsRepository)
         {
-            _clientsRepository = clientsRepository;
+            _clientRepository = clientsRepository;
         }
 
         // GET: Clients
         public async Task<IActionResult> Index()
         {
-            var results = await _clientsRepository.GetAllAsync();
-            return View(results);
+            var clients = await _clientRepository.GetAllAsync();
+            return View(clients);
         }
 
         // GET: Clients/Details/5
@@ -37,7 +32,7 @@ namespace TelemetryPortal_MVC.Controllers
                 return NotFound();
             }
 
-            var client = await _clientsRepository.GetByIdAsync(id.Value);
+            var client = await _clientRepository.GetByIdAsync(id.Value);
             if (client == null)
             {
                 return NotFound();
@@ -59,12 +54,12 @@ namespace TelemetryPortal_MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                client.ClientId = Guid.NewGuid();
-                await _clientsRepository.AddAsync(client);
+                await _clientRepository.AddAsync(client);
                 return RedirectToAction(nameof(Index));
             }
             return View(client);
         }
+
 
         // GET: Clients/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
@@ -74,7 +69,7 @@ namespace TelemetryPortal_MVC.Controllers
                 return NotFound();
             }
 
-            var client = await _clientsRepository.GetByIdAsync(id.Value);
+            var client = await _clientRepository.GetByIdAsync(id.Value);
             if (client == null)
             {
                 return NotFound();
@@ -96,11 +91,11 @@ namespace TelemetryPortal_MVC.Controllers
             {
                 try
                 {
-                    await _clientsRepository.UpdateAsync(client);
+                    await _clientRepository.UpdateAsync(client);
                 }
                 catch (Exception)
                 {
-                    if (!await _clientsRepository.ClientExistsAsync(client.ClientId))
+                    if (!await _clientRepository.ExistsAsync(client.ClientId))
                     {
                         return NotFound();
                     }
@@ -122,7 +117,7 @@ namespace TelemetryPortal_MVC.Controllers
                 return NotFound();
             }
 
-            var client = await _clientsRepository.GetByIdAsync(id.Value);
+            var client = await _clientRepository.GetByIdAsync(id.Value);
             if (client == null)
             {
                 return NotFound();
@@ -136,13 +131,13 @@ namespace TelemetryPortal_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            await _clientsRepository.DeleteAsync(id);
-            return RedirectToAction(nameof(Index));
-        }
+            if (!await _clientRepository.ExistsAsync(id))
+            {
+                return NotFound();
+            }
 
-        private async Task<bool> ClientExists(Guid id)
-        {
-            return await _clientsRepository.ClientExistsAsync(id);
+            await _clientRepository.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

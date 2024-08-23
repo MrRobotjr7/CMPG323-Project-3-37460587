@@ -1,32 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using TelemetryPortal_MVC.Data;
 using TelemetryPortal_MVC.Models;
 using TelemetryPortal_MVC.Repositories;
 
 namespace TelemetryPortal_MVC.Controllers
 {
-   [Authorize]
+    [Authorize]
     public class ProjectsController : Controller
     {
         private readonly IProjectsRepository _projectsRepository;
 
         public ProjectsController(IProjectsRepository projectsRepository)
         {
-          
             _projectsRepository = projectsRepository;
         }
 
         // GET: Projects
         public async Task<IActionResult> Index()
         {
-            var projects = await _projectsRepository.GetAllProjectsAsync();
+            var projects = await _projectsRepository.GetAllAsync();
             return View(projects);
         }
 
@@ -38,7 +32,7 @@ namespace TelemetryPortal_MVC.Controllers
                 return NotFound();
             }
 
-            var project = await _projectsRepository.GetProjectByIdAsync(id.Value);
+            var project = await _projectsRepository.GetByIdAsync(id.Value);
             if (project == null)
             {
                 return NotFound();
@@ -47,7 +41,6 @@ namespace TelemetryPortal_MVC.Controllers
             return View(project);
         }
 
-
         // GET: Projects/Create
         public IActionResult Create()
         {
@@ -55,15 +48,13 @@ namespace TelemetryPortal_MVC.Controllers
         }
 
         // POST: Projects/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ProjectId,ProjectName,ProjectDescription,ProjectCreationDate,ProjectStatus,ClientId")] Project project)
         {
             if (ModelState.IsValid)
             {
-                await _projectsRepository.AddProjectAsync(project);
+                await _projectsRepository.AddAsync(project);
                 return RedirectToAction(nameof(Index));
             }
             return View(project);
@@ -77,7 +68,7 @@ namespace TelemetryPortal_MVC.Controllers
                 return NotFound();
             }
 
-            var project = await _projectsRepository.GetProjectByIdAsync(id.Value);
+            var project = await _projectsRepository.GetByIdAsync(id.Value);
             if (project == null)
             {
                 return NotFound();
@@ -86,8 +77,6 @@ namespace TelemetryPortal_MVC.Controllers
         }
 
         // POST: Projects/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("ProjectId,ProjectName,ProjectDescription,ProjectCreationDate,ProjectStatus,ClientId")] Project project)
@@ -101,11 +90,11 @@ namespace TelemetryPortal_MVC.Controllers
             {
                 try
                 {
-                    await _projectsRepository.UpdateProjectAsync(project);
+                    await _projectsRepository.UpdateAsync(project);
                 }
                 catch (Exception)
                 {
-                    if (!await _projectsRepository.ProjectExistsAsync(project.ProjectId))
+                    if (!await _projectsRepository.ExistsAsync(project.ProjectId))
                     {
                         return NotFound();
                     }
@@ -127,7 +116,7 @@ namespace TelemetryPortal_MVC.Controllers
                 return NotFound();
             }
 
-            var project = await _projectsRepository.GetProjectByIdAsync(id.Value);
+            var project = await _projectsRepository.GetByIdAsync(id.Value);
             if (project == null)
             {
                 return NotFound();
@@ -135,17 +124,18 @@ namespace TelemetryPortal_MVC.Controllers
 
             return View(project);
         }
+
         // POST: Projects/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            if (!await _projectsRepository.ProjectExistsAsync(id))
+            if (!await _projectsRepository.ExistsAsync(id))
             {
                 return NotFound();
             }
 
-            await _projectsRepository.DeleteProjectAsync(id);
+            await _projectsRepository.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
     }
