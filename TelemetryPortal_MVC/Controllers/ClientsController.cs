@@ -7,34 +7,38 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TelemetryPortal_MVC.Data;
 using TelemetryPortal_MVC.Models;
+using TelemetryPortal_MVC.Repositories;
 
 namespace TelemetryPortal_MVC.Controllers
 {
     public class ClientsController : Controller
     {
         private readonly TechtrendsContext _context;
+        private readonly IClientsRepository _clientsRepository;
 
-        public ClientsController(TechtrendsContext context)
+        public ClientsController(TechtrendsContext context, IClientsRepository clientsRepository)
         {
             _context = context;
+            _clientsRepository = clientsRepository;
         }
 
         // GET: Clients
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Clients.ToListAsync());
+
+            var results = _clientsRepository.GetAll();
+            return View(results);
         }
 
         // GET: Clients/Details/5
-        public async Task<IActionResult> Details(Guid? id)
+        public IActionResult Details(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var client = await _context.Clients
-                .FirstOrDefaultAsync(m => m.ClientId == id);
+            var client = _clientsRepository.GetById(id.Value);
             if (client == null)
             {
                 return NotFound();
@@ -54,40 +58,38 @@ namespace TelemetryPortal_MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ClientId,ClientName,PrimaryContactEmail,DateOnboarded")] Client client)
+        public IActionResult Create([Bind("ClientId,ClientName,PrimaryContactEmail,DateOnboarded")] Client client)
         {
             if (ModelState.IsValid)
             {
                 client.ClientId = Guid.NewGuid();
-                _context.Add(client);
-                await _context.SaveChangesAsync();
+                _clientsRepository.Add(client);
                 return RedirectToAction(nameof(Index));
             }
             return View(client);
         }
 
         // GET: Clients/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
+        public IActionResult Edit(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var client = await _context.Clients.FindAsync(id);
+            var client = _clientsRepository.GetById(id.Value);
             if (client == null)
             {
                 return NotFound();
             }
             return View(client);
         }
-
         // POST: Clients/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("ClientId,ClientName,PrimaryContactEmail,DateOnboarded")] Client client)
+        public IActionResult Edit(Guid id, [Bind("ClientId,ClientName,PrimaryContactEmail,DateOnboarded")] Client client)
         {
             if (id != client.ClientId)
             {
@@ -98,12 +100,11 @@ namespace TelemetryPortal_MVC.Controllers
             {
                 try
                 {
-                    _context.Update(client);
-                    await _context.SaveChangesAsync();
+                    _clientsRepository.Update(client);
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception)
                 {
-                    if (!ClientExists(client.ClientId))
+                    if (!_clientsRepository.ClientExists(client.ClientId))
                     {
                         return NotFound();
                     }
@@ -118,15 +119,14 @@ namespace TelemetryPortal_MVC.Controllers
         }
 
         // GET: Clients/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
+        public IActionResult Delete(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var client = await _context.Clients
-                .FirstOrDefaultAsync(m => m.ClientId == id);
+            var client = _clientsRepository.GetById(id.Value);
             if (client == null)
             {
                 return NotFound();
@@ -138,21 +138,15 @@ namespace TelemetryPortal_MVC.Controllers
         // POST: Clients/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        public IActionResult DeleteConfirmed(Guid id)
         {
-            var client = await _context.Clients.FindAsync(id);
-            if (client != null)
-            {
-                _context.Clients.Remove(client);
-            }
-
-            await _context.SaveChangesAsync();
+            _clientsRepository.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool ClientExists(Guid id)
         {
-            return _context.Clients.Any(e => e.ClientId == id);
+            return _clientsRepository.ClientExists(id);
         }
     }
 }
