@@ -96,7 +96,7 @@ Freeman, E. and Robson, E., 2020. Head First Design Patterns: A Brain-Friendly G
 
 Fowler, M., 2003. Patterns of Enterprise Application Architecture. Boston: Addison-Wesley.
 
-Microsoft, 2023. ASP.NET Core documentation. [online] Available at: https://learn.microsoft.com/en-us/aspnet/core/?view=aspnetcore-6.0 [Accessed 25 August 2024].
+Microsoft, 2023. ASP.NET Core documentation. [online] Available at: https://learn.microsoft.com/en-us/aspnet/core/?view=aspnetcore-6.0 [Accessed 20 August 2024].
 
 Martin, R.C., 2008. Clean Code: A Handbook of Agile Software Craftsmanship. Upper Saddle River: Prentice Hall.
 
@@ -106,11 +106,11 @@ Kruchten, P., 1995. Architectural Blueprints—The "4+1" View Model of Software 
 
 Gamma, E., Helm, R., Johnson, R. and Vlissides, J., 1994. Design Patterns: Elements of Reusable Object-Oriented Software. Boston: Addison-Wesley.
 
-Microsoft, 2023. Entity Framework Core documentation. [online] Available at: https://learn.microsoft.com/en-us/ef/core/ [Accessed 25 August 2024].
+Microsoft, 2023. Entity Framework Core documentation. [online] Available at: https://learn.microsoft.com/en-us/ef/core/ [Accessed 20 August 2024].
 
 Freeman, S., and Pryce, N., 2010. Growing Object-Oriented Software, Guided by Tests. Boston: Addison-Wesley.
 
-National Institute of Standards and Technology (NIST), 2011. Security and Privacy Controls for Federal Information Systems and Organizations. [online] Available at: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf [Accessed 25 August 2024].
+National Institute of Standards and Technology (NIST), 2011. Security and Privacy Controls for Federal Information Systems and Organizations. [online] Available at: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf [Accessed 20 August 2024].
 
 Bishop, M., 2002. Computer Security: Art and Science. Boston: Addison-Wesley.
 
